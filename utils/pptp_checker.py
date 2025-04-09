@@ -1,8 +1,9 @@
 import pytz
+import socket
+import requests as r
+from minfraud import Client
 from datetime import datetime
 from subprocess import call, check_output
-from minfraud import Client
-import requests as r
 
 from utils.files_utils import get_count_checked, add_checked
 
@@ -67,3 +68,10 @@ def process_pptp_file(filename):
             add_checked(ips)
             pskl()
             continue
+
+
+def is_port_open(ip, port=1723, timeout=3):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(timeout)
+        result = s.connect_ex((ip, port))
+        return result == 0
