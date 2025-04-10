@@ -8,8 +8,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
 from utils.files_utils import clean_checked, get_unique_lines
-from utils.pptp_checker import process_pptp_file, is_port_open
-from utils.generator import generate_and_save_ips
+from utils.pptp_checker import is_port_open, process_pptp_file
 
 from config import ADMIN_ID, BACKEND_URL
 
@@ -23,6 +22,11 @@ class UploadFileState(StatesGroup):
 
 @router.message(F.text == "Загрузить файл")
 async def upload_file(message: Message, state: FSMContext):
+    user_id = message.from_user.id
+    if user_id not in ADMIN_ID:
+        await message.answer("У вас нет прав на выполнение этой команды.")
+        return
+
     await message.answer(
         "Отправьте файл с айпи адресами.(каждый с новой строки)\nИли напишите /cancel, чтобы отменить загрузку."
     )
@@ -105,7 +109,7 @@ async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
             for line in opened_ips:
                 f.write(line + "\n")
 
-        # process_pptp_file("ips.txt")
+        process_pptp_file("ips.txt")
 
         await msg.answer(
             text="Проверка завершена.",
