@@ -18,4 +18,4 @@ def get_unique_lines(base_path, check_path):
     with open(base_path, "r", encoding="utf-8") as f:
         base_lines = set(line.strip() for line in f)
     with open(check_path, "r", encoding="utf-8") as f:
-        return [line.strip() for line in f if line.strip() not in base_lines]
+        return [line.strip() for line in f]

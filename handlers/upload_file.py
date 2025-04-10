@@ -87,6 +87,7 @@ async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
             f.write(r.content)
 
         unique_lines = get_unique_lines("main_db.txt", "ips.txt")
+        # print(unique_lines)
 
         with open("ips.txt", "w") as f:
             for line in unique_lines:
@@ -112,7 +113,7 @@ async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
         process_pptp_file("ips.txt")
 
         await msg.answer(
-            text="Проверка завершена.",
+            text="Проверка завершена.)",
         )
     elif msg.text == "❌Отменить чек":
         await msg.answer(

