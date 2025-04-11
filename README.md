@@ -1,1 +1,1 @@
-"# aiogram3-template" 
+also need install: minfraud
