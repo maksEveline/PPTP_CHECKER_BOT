@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 
-from handlers import user_commands, start_generate, upload_file, force_check
+from handlers import user_commands, start_generate, upload_file, force_check, remove_ips
 
 from data.database import initialize_db
 from config import TOKEN, DB_PATH
@@ -18,6 +18,7 @@ async def main():
         start_generate.router,
         upload_file.router,
         force_check.router,
+        remove_ips.router,
     )
 
     await bot.delete_webhook(drop_pending_updates=True)
