@@ -75,36 +75,44 @@ async def get_file(msg: Message, state: FSMContext, bot: Bot):
 @router.message(UploadFileState.is_start)
 async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
     if msg.text == "✅Запустить чек":
-        await msg.answer(
-            text="Чек запущен. Ждите уведомлений...",
-        )
+        await msg.answer(text="Чек запущен. Ждите уведомлений...")
 
         clean_checked()
-        r = requests.get(
-            f"{BACKEND_URL}/get_db",
-        )
+        r = requests.get(f"{BACKEND_URL}/get_db")
         with open("main_db.txt", "wb") as f:
             f.write(r.content)
 
         unique_lines = get_unique_lines("main_db.txt", "ips.txt")
-        # print(unique_lines)
-
         with open("ips.txt", "w") as f:
             for line in unique_lines:
                 f.write(line + "\n")
 
         opened_ips = []
+        checked = 0
+        opened = 0
+        closed = 0
 
         with open("ips.txt", "r") as f:
-            lines = f.readlines()
-            lines = [line.strip() for line in lines if line.strip()]
-            for line in lines:
-                is_open = is_port_open(line.strip(), 1723)
+            lines = [line.strip() for line in f if line.strip()]
+            total = len(lines)
+            step = max(100, total // 5)
+
+            for i, line in enumerate(lines, start=1):
+                is_open = is_port_open(line, 1723)
+                checked += 1
+
                 if is_open:
-                    print(f"{line.strip()} 1723 is open")
-                    opened_ips.append(line.strip())
+                    opened_ips.append(line)
+                    opened += 1
                 else:
-                    print(f"{line.strip()} 1723 is closed")
+                    closed += 1
+
+                if i % step == 0 or i == total:
+                    await msg.answer(
+                        f"Проверено: {checked}/{total}\n"
+                        f"Открытых: {opened}\n"
+                        f"Закрытых: {closed}"
+                    )
 
         with open("ips.txt", "w") as f:
             for line in opened_ips:
@@ -112,16 +120,12 @@ async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
 
         process_pptp_file("ips.txt")
 
-        await msg.answer(
-            text="Проверка завершена.)",
-        )
+        await msg.answer(text="Проверка завершена.)")
     elif msg.text == "❌Отменить чек":
-        await msg.answer(
-            text="Чек отменен.",
-        )
+        await msg.answer(text="Чек отменен.")
         await state.clear()
         return
     else:
         await msg.answer(
-            text="Некорректный выбор. Пожалуйста, выберите действие из меню.",
+            text="Некорректный выбор. Пожалуйста, выберите действие из меню."
         )
