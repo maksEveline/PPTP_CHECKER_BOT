@@ -123,6 +123,8 @@ async def start_check(msg: Message, bot: Bot, state: FSMContext):
             total = len(lines)
             step = max(100, total // 5)
 
+            step = 100
+
             for i, line in enumerate(lines, start=1):
                 is_open = is_port_open(line, 1723)
                 checked += 1
@@ -133,12 +135,19 @@ async def start_check(msg: Message, bot: Bot, state: FSMContext):
                 else:
                     closed += 1
 
-                if i % step == 0 or i == total:
+                if i % step == 0:
                     await msg.answer(
                         f"Проверено: {checked}/{total}\n"
                         f"Открытых: {opened}\n"
                         f"Закрытых: {closed}"
                     )
+
+            if checked % step != 0:
+                await msg.answer(
+                    f"Проверено: {checked}/{total}\n"
+                    f"Открытых: {opened}\n"
+                    f"Закрытых: {closed}"
+                )
 
         with open("ips.txt", "w") as f:
             for line in opened_ips:
