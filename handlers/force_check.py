@@ -1,14 +1,11 @@
 import re
-import requests
 
-from aiogram import Router, F, Bot
-from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
+from aiogram import Router, F
+from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
-from utils.files_utils import clean_checked, get_unique_lines
 from utils.pptp_checker import process_pptp_list, is_port_open
-from utils.generator import generate_and_save_ips
 
 from config import ADMIN_ID
 
@@ -36,6 +33,7 @@ async def force_check_process(message: Message, state: FSMContext):
     invalid_ips = [
         ip for ip in ips if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip)
     ]
+
     if invalid_ips:
         await message.answer(f"Некорректные айпи адреса:\n{', '.join(invalid_ips)}")
         return
@@ -57,4 +55,5 @@ async def force_check_process(message: Message, state: FSMContext):
     process_pptp_list(ips)
 
     await message.answer("Проверка завершена. Результаты отправлены админу.")
+
     await state.clear()

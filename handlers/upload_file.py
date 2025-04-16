@@ -130,6 +130,9 @@ async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
         process_pptp_file("ips.txt")
 
         await msg.answer(text="Проверка завершена.)")
+
+        await state.clear()
+
     elif msg.text == "❌Отменить чек":
         await msg.answer(text="Чек отменен.")
         await state.clear()
