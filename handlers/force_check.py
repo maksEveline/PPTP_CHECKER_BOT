@@ -45,7 +45,7 @@ async def force_check_process(message: Message, state: FSMContext):
     for ip in ips:
         if opened_counter == 10:
             await message.answer(
-                f"Пройдено {all_counter} IP-адресов\nАйдпи с открытым портом:{len(all_opened_ips)}"
+                f"Пройдено {all_counter} IP-адресов\nАйпи с открытым портом: {len(all_opened_ips)}"
             )
             opened_counter = 0
 
@@ -64,7 +64,7 @@ async def force_check_process(message: Message, state: FSMContext):
         return
 
     await message.answer(
-        f"Проверка на открытость портов закона.\nПроверено:{all_counter}\nОткрытых:{len(all_opened_ips)}\n\n"
+        f"Проверка на открытость портов закончена.\nПроверено: {all_counter}\nОткрытых: {len(all_opened_ips)}\nНачинаю проверку на валид..."
     )
 
     process_pptp_list(ips)
