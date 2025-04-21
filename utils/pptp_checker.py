@@ -51,13 +51,13 @@ def pptp(ip, log, pas):
 
 def process_pptp_file(filename):
     pptps = open(filename).read().split("\n")
-    for ips in list(pptps):
-        kyiv_tz = pytz.timezone("Europe/Kyiv")
-        now = datetime.now(kyiv_tz)
+    checked_count = 0
+    all_checked_count = 0
 
-        if now.hour == 12 and now.minute == 0:
-            count = get_count_checked()
-            send(f"Вообщем проверено {count} IP-адресов")
+    for ips in list(pptps):
+        if checked_count == 10:
+            send(f"Вообщем проверено {all_checked_count} IP-адресов")
+            checked_count = 0
 
         try:
             iss = pptp(ips, "admin", "admin")
@@ -65,21 +65,29 @@ def process_pptp_file(filename):
             send(text)
             print(f"proxy: {ips} - is work")
             pskl()
+
+            checked_count += 1
+            all_checked_count += 1
+
         except:
             add_checked(ips)
             pskl()
             print(f"proxy: {ips} - isn't work")
+
+            checked_count += 1
+            all_checked_count += 1
+
             continue
 
 
 def process_pptp_list(ip_list):
-    for ip in list(ip_list):
-        kyiv_tz = pytz.timezone("Europe/Kyiv")
-        now = datetime.now(kyiv_tz)
+    checked_count = 0
+    all_checked_count = 0
 
-        if now.hour == 12 and now.minute == 0:
-            count = get_count_checked()
-            send(f"Вообщем проверено {count} IP-адресов")
+    for ip in list(ip_list):
+        if checked_count == 10:
+            send(f"Вообщем проверено {all_checked_count} IP-адресов")
+            checked_count = 0
 
         try:
             iss = pptp(ip, "admin", "admin")
@@ -87,10 +95,18 @@ def process_pptp_list(ip_list):
             send(text)
             print(f"proxy: {ip} - is work")
             pskl()
+
+            checked_count += 1
+            all_checked_count += 1
+
         except:
             add_checked(ip)
             pskl()
             print(f"proxy: {ip} - isn't work")
+
+            checked_count += 1
+            all_checked_count += 1
+
             continue
 
 

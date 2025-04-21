@@ -38,6 +38,7 @@ async def force_check_process(message: Message, state: FSMContext):
         await message.answer(f"Некорректные айпи адреса:\n{', '.join(invalid_ips)}")
         return
 
+    all_opened_ips = []
     opened_ips = []
     opened_counter = 0
 
@@ -50,8 +51,9 @@ async def force_check_process(message: Message, state: FSMContext):
         if is_port_open(ip, 1723):
             opened_ips.append(ip)
             opened_counter += 1
+            all_opened_ips.append(ip)
 
-    if len(opened_ips) == 0:
+    if len(all_opened_ips) == 0:
         await message.answer("Нет доступных PPTP серверов.")
         await state.clear()
 
@@ -64,3 +66,4 @@ async def force_check_process(message: Message, state: FSMContext):
     await message.answer("Проверка завершена. Результаты отправлены админу.")
 
     await state.clear()
+    return
