@@ -54,6 +54,7 @@ async def force_check_process(message: Message, state: FSMContext):
             opened_counter += 1
             all_opened_ips.append(ip)
         else:
+            opened_counter += 1
             all_counter += 1
 
     if len(all_opened_ips) == 0:
