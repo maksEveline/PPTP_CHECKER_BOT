@@ -39,10 +39,17 @@ async def force_check_process(message: Message, state: FSMContext):
         return
 
     opened_ips = []
+    opened_counter = 0
 
     for ip in ips:
+        if opened_counter == 10:
+            await message.answer(f"Айпи с открытыми портами:\n{', '.join(opened_ips)}")
+            opened_ips = []
+            opened_counter = 0
+
         if is_port_open(ip, 1723):
             opened_ips.append(ip)
+            opened_counter += 1
 
     if len(opened_ips) == 0:
         await message.answer("Нет доступных PPTP серверов.")
