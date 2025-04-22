@@ -129,7 +129,7 @@ async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
 
         process_pptp_file("ips.txt")
 
-        await msg.answer(text="Проверка завершена.)")
+        await msg.answer(text="Проверка завершена.")
 
         await state.clear()
 
