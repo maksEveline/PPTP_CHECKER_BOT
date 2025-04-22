@@ -5,7 +5,7 @@ from minfraud import Client
 from datetime import datetime
 from subprocess import call, check_output
 
-from utils.files_utils import get_count_checked, add_checked
+from utils.files_utils import add_checked
 
 from config import CHAT_ID, TOKEN
 
@@ -28,7 +28,7 @@ def risk(ip):
 
 
 def send(text):
-    res = r.get(
+    r.get(
         f"https://api.telegram.org/bot{TOKEN}/sendMessage",
         params={"chat_id": CHAT_ID, "text": text},
     )
@@ -53,6 +53,7 @@ def process_pptp_file(filename):
     pptps = open(filename).read().split("\n")
     checked_count = 0
     all_checked_count = 0
+    success_ip = 0
 
     for ips in list(pptps):
         if checked_count == 10:
@@ -68,6 +69,7 @@ def process_pptp_file(filename):
 
             checked_count += 1
             all_checked_count += 1
+            success_ip += 1
 
         except:
             add_checked(ips)
@@ -79,10 +81,15 @@ def process_pptp_file(filename):
 
             continue
 
+    send(
+        f"Проверено {all_checked_count} IP-адресов на валидность\nВалидных: {success_ip}"
+    )
+
 
 def process_pptp_list(ip_list):
     checked_count = 0
     all_checked_count = 0
+    success_ip = 0
 
     for ip in list(ip_list):
         if checked_count == 10:
@@ -98,6 +105,7 @@ def process_pptp_list(ip_list):
 
             checked_count += 1
             all_checked_count += 1
+            success_ip += 1
 
         except:
             add_checked(ip)
@@ -108,6 +116,10 @@ def process_pptp_list(ip_list):
             all_checked_count += 1
 
             continue
+
+    send(
+        f"Проверено {all_checked_count} IP-адресов на валидность\Валдиных: {success_ip}"
+    )
 
 
 def is_port_open(ip, port=1723, timeout=3):

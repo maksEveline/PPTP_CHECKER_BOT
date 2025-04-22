@@ -78,9 +78,9 @@ async def start_check_upld_file(msg: Message, bot: Bot, state: FSMContext):
         await msg.answer(text="Чек запущен. Ждите уведомлений...")
 
         clean_checked()
-        r = requests.get(f"{BACKEND_URL}/get_db")
-        with open("main_db.txt", "wb") as f:
-            f.write(r.content)
+        # r = requests.get(f"{BACKEND_URL}/get_db")
+        # with open("main_db.txt", "wb") as f:
+        #     f.write(r.content)
 
         unique_lines = get_unique_lines("main_db.txt", "ips.txt")
         with open("ips.txt", "w") as f:
